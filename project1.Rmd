@@ -53,4 +53,36 @@ ggplot(year_count, aes(x = Year, y = count, group = 1)) +
        y = "Number of Killings") +
   annotate("text", x = 2018, y = 10, label = "")
 ```
+```{r}
+data$age <- as.character(data$age)
+data$age[data$age %in% c('?', '*months', '<*')] <- NA
+data <- na.omit(data)
+data$age <- as.integer(data$age)
+
+# Filter out rows where gender is not 'male' or 'female'
+data <- data[data$gender %in% c('male', 'female'), ]
+
+# Group age into bins
+data$age_group <- cut(data$age, breaks = c(0, 18, 35, 55, 100), 
+                      labels = c("<18", "18-35", "35-55", "55+"), include.lowest = TRUE)
+
+# Distribution of bear attack fatalities by gender and age group
+gender_age_plot <- ggplot(data[!is.na(data$age_group), ], aes(x = gender, fill = age_group)) +
+  geom_bar(position = "dodge") +
+  ggtitle("Distribution of Bear Attack Fatalities by Gender and Age Group") +
+  xlab("Gender") +
+  ylab("Number of Fatalities") +
+  theme_minimal()
+
+# Print the plot
+print(gender_age_plot)
+
+# Print quantities 
+quantities <- data[!is.na(data$age_group), ] %>% 
+  group_by(gender, age_group) %>% 
+  summarise(count = n())
+
+print(quantities)
+
+```
 
