@@ -28,11 +28,29 @@ bear_count <- data %>%
 print(bear_count)
 
 # Create the bar plot
-ggplot(bear_count, aes(x = `Type.of.bear`, y = count, fill = `Type.of.bear`)) +
+ggplot(bear_count, aes(x = `Type of bear`, y = count, fill = `Type.of.bear`)) +
   geom_bar(stat = "identity") +
   theme_minimal() +
   labs(title = "Number of Bear Killings by Type of Bear",
        y = "Number of Killings") +
   theme(axis.title.x = element_blank())  # Removes x-axis label
+```
+```{r}
+# Count the number of bear killings by year
+year_count <- data %>% 
+  group_by(Year) %>% 
+  summarise(count = n())
+
+print(year_count)
+
+# Create the line plot
+ggplot(year_count, aes(x = Year, y = count, group = 1)) +
+  geom_line(color = "blue") +
+  geom_point(color = "blue", size = 3) +
+  theme_minimal() +
+  labs(title = "Number of Bear Killings Over the Years",
+       x = "Year",
+       y = "Number of Killings") +
+  annotate("text", x = 2018, y = 10, label = "")
 ```
 
