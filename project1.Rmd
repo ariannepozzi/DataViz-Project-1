@@ -1,7 +1,38 @@
 ---
-title: "project1"
+title: "dataviz"
 output: html_document
-date: "2024-03-29"
+date: "2024-04-01"
 ---
 
-hh
+```{r}
+library(ggplot2)
+library(dplyr)
+# Read the data
+data <- read.csv("north_america_bear_killings.csv")
+
+head(data)
+```
+
+```{r}
+# Check for null values
+null_values <- sapply(data, function(x) sum(is.na(x)))
+print(null_values)
+```
+
+```{r}
+# Count the number of bear killings by bear type
+bear_count <- data %>% 
+  group_by(`Type.of.bear`) %>% 
+  summarise(count = n())
+
+print(bear_count)
+
+# Create the bar plot
+ggplot(bear_count, aes(x = `Type.of.bear`, y = count, fill = `Type.of.bear`)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Number of Bear Killings by Type of Bear",
+       y = "Number of Killings") +
+  theme(axis.title.x = element_blank())  # Removes x-axis label
+```
+
